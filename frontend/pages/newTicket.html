@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.ico">
+  <title>Novo Chamado • Suporte OMTX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../style.css">
+</head>
+
+<body onload="guardAuth()">
+  <div class="container">
+    <header class="appbar">
+      <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo"></div>
+      <div class="links">
+        <a class="btn primary" href="./mainUI.html">Início</a>
+        <!-- <a class="btn primary" href="./listTickets.html">Meus chamados</a> -->
+        <a class="btn secondary" onclick="logout()">Sair</a>
+      </div>
+    </header>
+
+    <div class="card">
+      <h1>Novo chamado</h1>
+      <label>Título</label>
+      <input id="ticketTitle" placeholder="Ex.: Problema no e-mail">
+      <label>Descrição</label>
+      <textarea id="ticketDesc" placeholder="Descreva o que está acontecendo, passos para reproduzir, etc."></textarea>
+
+      <div class="grid-2">
+        <div>
+          <label>Urgência</label>
+          <select id="ticketUrgency">
+            <option value="1">Muito baixa</option>
+            <option value="2">Baixa</option>
+            <option value="3" selected>Média</option>
+            <option value="4">Alta</option>
+            <option value="5">Muito alta</option>
+          </select>
+        </div>
+        <div>
+          <label>Qual produto você estar tendo Problema?</label>
+          <input id="produto" placeholder="emails separados por vírgula">
+        </div>
+        <div>
+          <label>Adicionar CC (Observadores)</label>
+          <input id="ticketCC" placeholder="emails separados por vírgula">
+        </div>
+    
+      </div>
+
+      <div class="space"></div>
+      <button onclick="createTicket()">Enviar</button>
+    </div>
+  </div>
+  <script src="../script.js?v=9"></script>
+</body>
+
+</html>

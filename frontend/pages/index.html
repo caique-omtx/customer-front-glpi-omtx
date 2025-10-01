@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.ico">
+    <title>Login • Suporte OMTX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="page-login">
+    <!-- BG animado: fica atrás do conteúdo -->
+    <div class="login-bg">
+        <img class="rack rack-left" src="../assets/server-left.png" alt="" aria-hidden="true">
+        <img class="rack rack-right" src="../assets/server-right.png" alt="" aria-hidden="true">
+    </div>
+    <div class="containerLogin">
+        <div class="cardLogin">
+            <header class="appbar">
+                <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo">
+                </div>
+            </header>
+            <form onsubmit="event.preventDefault(); login();">
+                <div id="loginError" class="alert"></div>
+                <div class="grid-2">
+                    <div>
+                        <label>Usuário</label>
+                        <div class="input-icon">
+                            <span class="icon">👤</span>
+                            <input id="loginUser" placeholder="usuario@domain.com" autocomplete="username">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <label>Senha</label>
+                    <div class="input-icon input-with-icon">
+                    <span class="icon">🔑</span>
+                     <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+                    </div>
+                </div>
+                <div><button type="submit">Entrar</button></div>
+                <div class="rstpa"> <a href="./resetPass.html">Esqueceu a senha?</a> </div>
+                
+        </div>
+
+        </form>
+    </div>
+    </div>
+    <script><!-- window.API_URL='http://localhost:5000'; --></script>
+    <script src="../script.js?v=9"></script>
+</body>
+
+</html>
+
+</html>

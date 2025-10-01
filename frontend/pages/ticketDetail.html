@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.ico">
+    <title>Detalhe do Chamado • Suporte OMTX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body class="page-detail" onload="guardAuth(); loadTicketDetail();">
+    <div class="container">
+        <header class="appbar">
+            <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo"></div>
+            <div class="links">
+                <a class="btn primary" href="./mainUI.html">Inicio</a>
+                <a class="btn secondary" onclick="logout()">Sair</a>
+            </div>
+        </header>
+
+        <div class="card scrollable">
+            <h1>Chamado <span id="ticketId"></span></h1>
+            <h2 class="muted">Últimas interações</h2>
+            <div id="followups"></div>
+            <div class="space"></div>
+            <h2 class="muted">Responder</h2>
+            <textarea id="replyMsg" placeholder="Digite sua mensagem para a central de suporte"></textarea>
+            <div class="space"></div>
+            <button onclick="sendFollowup()">Enviar resposta</button>
+        </div>
+    </div>
+    <script src="../script.js?v=9"></script>
+</body>
+
+</html>

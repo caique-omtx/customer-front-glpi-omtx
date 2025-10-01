@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.ico">
+    <title>Início • Suporte OMTX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body onload="guardAuth(); loadDashboard(); loadTickets();">
+    <div class="container">
+        <header class="appbar">
+            <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo"></div>
+            <div class="links">
+                <a class="btn primary" href="./newTicket.html">Abrir chamado</a>
+                <!-- <a class="btn primary" href="./listTickets.html">Meus chamados</a> -->
+                <a class="btn secondary" onclick="logout()">Sair</a>
+            </div>
+        </header>
+        <div class="card">
+            <h1>Portal de Suporte</h1>
+            <p class="muted">Visão geral dos seus chamados</p>
+            <div class="kpis">
+                <div class="kpi total">
+                    <div class="label">Total</div>
+                    <div class="value" id="kpiTotal">—</div>
+                </div>
+                <div class="kpi open">
+                    <div class="label">Abertos</div>
+                    <div class="value" id="kpiOpen">—</div>
+                </div>
+                <div class="kpi closed">
+                    <div class="label">Fechados</div>
+                    <div class="value" id="kpiClosed">—</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <h1>Meus chamados</h1>
+            <div class="tickets">
+                <div class="tickets-header">
+                    <div>ID</div>
+                    <div>Título</div>
+                    <div>Status</div>
+                    <div>Criado</div>
+                </div>
+                <div class="tickets-body" id="ticketsBody"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../script.js?v=9"></script>
+</body>
+
+</html>

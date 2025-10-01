@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon.ico">
+    <title>Redefinir Senha • Suporte OMTX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="appbar">
+            <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo"></div>
+            <div class="links"><a class="btn secondary" href="./index.html">Login</a></div>
+        </header>
+
+        <div class="card">
+            <h1>Esqueceu a senha</h1>
+            <div class="grid-2">
+                <div>
+                    <h2 class="muted">Enviar token por e-mail</h2>
+                    <label>E-mail</label>
+                    <input id="emailForgot" placeholder="email@dominio.com">
+                    <div class="space"></div><button onclick="forgotPassword()">Enviar</button>
+                </div>
+                <div>
+                    <h2 class="muted">Redefinir com token</h2>
+                    <label>E-mail</label><input id="emailReset" placeholder="email@dominio.com">
+                    <label>Token</label><input id="tokenReset" placeholder="Cole o token recebido">
+                    <label>Nova senha</label><input id="newPass" type="password" placeholder="••••••••">
+                    <div class="space"></div><button onclick="resetPassword()">Redefinir senha</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../script.js?v=9"></script>
+</body>
+
+</html>

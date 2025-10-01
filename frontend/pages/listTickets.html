@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Chamados • GLPI Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body onload="guardAuth(); loadTickets();">
+    <div class="container">
+        <header class="appbar">
+            <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo"></div>
+            <div class="links">
+                <a class="btn primary" href="./mainUI.html">Início</a>
+                <a class="btn primary" href="./newTicket.html">Abrir chamado</a>
+                <a class="btn secondary" onclick="logout()">Sair</a>
+            </div>
+        </header>
+
+        <div class="card">
+            <h1>Meus chamados</h1>
+            <div class="tickets">
+                <div class="tickets-header">
+                    <div>ID</div>
+                    <div>Título</div>
+                    <div>Status</div>
+                    <div>Criado</div>
+                </div>
+                <div class="tickets-body" id="ticketsBody"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../script.js?v=9"></script>
+</body>
+
+</html>
