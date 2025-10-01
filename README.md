@@ -1,4 +1,4 @@
-O codigo vou desenvolvido por Caique Santos e comjunto com a equipe OMTX.
+O codigo vou desenvolvido por Caique Santos e conjunto com a equipe OMTX.
 Os codigos foram corrijidos e aperfeiçoados com auxilio de IA.
 
 Esse portal e destinado para clientes para que podem fazer as ações abaixo sem precisar ter contato com GLPI:
