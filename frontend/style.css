@@ -228,16 +228,12 @@ header.appbar .links a {
     color: var(--muted)
 }
 
-/* .grid-2 {
+.grid-2 {
     display: flex;
     grid-template-columns: 1fr 1fr;
     gap: 16px
-} */
-
-.grid-2 {
-    grid-template-columns: 1fr 1fr;
-    gap: 20px
 }
+
 
 .formLogin {
     display: flex;
