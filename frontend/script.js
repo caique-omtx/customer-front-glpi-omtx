@@ -85,7 +85,7 @@ async function createTicket() {
     const ccEmails = parseEmails(document.getElementById('ticketCC').value);
     await api('/api/tickets', { method: 'POST', body: JSON.stringify({ name: title, content, session_token: t, urgency, ccEmails }) });
     alert('Chamado criado com sucesso!');
-    go('listTickets');
+    go('mainUI');
 }
 function statusBadgeHTML(s) {
     const status = Number(s);

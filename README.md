@@ -34,5 +34,3 @@ frontend/
     newTicket.html
     listTickets.html
     resetPass.html
-# customer-front-glpi-omtx
-# customer-front-glpi-omtx

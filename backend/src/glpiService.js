@@ -48,6 +48,11 @@ export async function createTicket({ name, content, urgency = 3, ccEmails = [] }
   const data = res.data;
   const ticketId = data?.id || data?.[0]?.id || data?.ticket?.id || null;
 
+   // garante o Requester = usuário logado
+if (ticketId) {
+  await ensureRequester(ticketId, sessionToken);
+ }
+
   // Observadores (CC)
   const added = []; const notFound = [];
   if (ticketId && Array.isArray(ccEmails) && ccEmails.length) {
@@ -120,10 +125,35 @@ async function _searchUserByEmailViaSearch(email, sessionToken){
   return null;
 }
 export async function searchUserIdByEmail(email, sessionToken){ return await _searchUserByEmailViaSearch(email, sessionToken); }
+
 export async function addObserver(ticketId, userId, sessionToken){
-  const payload = { input: { tickets_id: Number(ticketId), users_id: Number(userId), type: 2, use_notification: 1 } };
+  return addTicketUser(ticketId, userId, 2, sessionToken); // 2 = Observer
+}
+
+// Garantir que o usuário da sessão é requester do ticket
+async function getUserIdFromSession(sessionToken){
+  try {
+    const f = await getFullSession(sessionToken);
+    return f?.session?.glpiID || f?.user?.id || null;
+  } catch { return null; }
+}
+
+export async function addTicketUser(ticketId, userId, type, sessionToken){
+  const payload = { input: { tickets_id: Number(ticketId), users_id: Number(userId), type: Number(type), use_notification: 1 } };
   const res = await http.post('/Ticket_User', payload, { headers: headersWith(sessionToken) });
   return res.data;
+}
+
+async function ensureRequester(ticketId, sessionToken){
+  const uid = await getUserIdFromSession(sessionToken);
+  if (!uid) return false;
+  try {
+    await addTicketUser(ticketId, uid, 1, sessionToken); // 1 = Requester
+    return true;
+  } catch (_) {
+    // Provavelmente já é requester; ignora
+    return false;
+  }
 }
 
 // ---- Estatísticas (dashboard) ----
