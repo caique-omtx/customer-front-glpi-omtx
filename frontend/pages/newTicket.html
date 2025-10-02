@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../style.css">
 </head>
 
-<body onload="guardAuth()">
+<body onload="guardAuth(); initNewTicket(); loadCategories()">
   <div class="container">
     <header class="appbar">
       <div class="row"><img src="https://omtx.com.br/img/omtx-logo.png" alt="logo"></div>
@@ -31,17 +31,19 @@
         <div>
           <label>Urgência</label>
           <select id="ticketUrgency">
-            <option value="1">Muito baixa</option>
+            <option value="1" selected>Muito baixa</option>
             <option value="2">Baixa</option>
-            <option value="3" selected>Média</option>
+            <option value="3">Média</option>
             <option value="4">Alta</option>
             <option value="5">Muito alta</option>
           </select>
         </div>
-        <!-- <div>
-          <label>Qual produto você estar tendo Problema?</label>
-          <input id="produto" placeholder="emails separados por vírgula">
-        </div> -->
+        <div>
+          <label>Categoria</label>
+          <select id="ticketCategory">
+            <option value="">Carregando categorias...</option>
+           </select>
+        </div>
         <div>
           <label>Adicionar CC (Observadores)</label>
           <input id="ticketCC" placeholder="emails separados por vírgula">

@@ -7,6 +7,47 @@ function go(page) { location.href = `${baseFront()}/pages/${page}.html`; }
 function get(k) { return localStorage.getItem(k) }
 function set(k, v) { localStorage.setItem(k, v) }
 function del(k) { localStorage.removeItem(k) }
+// helpers para prefs
+const PREFS_KEY = 'newTicketPrefs';
+function loadTicketPrefs(){
+  try { return JSON.parse(localStorage.getItem(PREFS_KEY) || '{}'); } catch { return {}; }
+}
+function saveTicketPrefs(patch){
+  const cur = loadTicketPrefs();
+  localStorage.setItem(PREFS_KEY, JSON.stringify({ ...cur, ...patch }));
+}
+
+// init da página Novo Chamado
+async function initNewTicket(){
+  // 1) carrega categorias do backend
+  await loadCategories();
+
+  // 2) aplica prefs/valores padrão
+  const prefs = loadTicketPrefs();
+
+  const title = document.getElementById('ticketTitle');
+  const desc  = document.getElementById('ticketDesc');
+  const urg   = document.getElementById('ticketUrgency');
+  const cat   = document.getElementById('ticketCategory');
+  const cc    = document.getElementById('ticketCC');
+
+  if (title && prefs.title) title.value = prefs.title;
+  if (desc && prefs.desc)   desc.value  = prefs.desc;
+  if (urg && prefs.urgency) urg.value   = String(prefs.urgency);
+  if (cat && prefs.category) cat.value  = String(prefs.category);
+
+  // preenche CC com preferido ou com e-mail do usuário logado
+  const userEmail = get('email') || '';
+  if (cc) cc.value = prefs.cc ?? userEmail ?? '';
+
+  // 3) listeners para salvar
+  title && title.addEventListener('input', () => saveTicketPrefs({ title: title.value }));
+  desc  && desc.addEventListener('input',  () => saveTicketPrefs({ desc: desc.value }));
+  urg   && urg.addEventListener('change', () => saveTicketPrefs({ urgency: urg.value }));
+  cat   && cat.addEventListener('change', () => saveTicketPrefs({ category: cat.value }));
+  cc    && cc.addEventListener('input',  () => saveTicketPrefs({ cc: cc.value }));
+}
+
 
 // sanitize
 function stripHtml(html) {
@@ -22,6 +63,26 @@ function parseEmails(str) {
 // alerts
 function showError(id, msg) { const el = document.getElementById(id); if (!el) return; el.textContent = msg || 'Ocorreu um erro'; el.classList.add('show'); }
 function clearError(id) { const el = document.getElementById(id); if (!el) return; el.textContent = ''; el.classList.remove('show'); }
+function ensureToastContainer() {
+    if (document.querySelector('.toast-container')) return;
+    const c = document.createElement('div');
+    c.className = 'toast-container';
+    document.body.appendChild(c);
+}
+function notify(type, message, timeout = 4500) {
+    ensureToastContainer();
+    const c = document.querySelector('.toast-container');
+    const t = document.createElement('div');
+    t.className = `toast ${type || 'info'}`;
+    t.textContent = message || '';
+    c.appendChild(t);
+    setTimeout(() => {
+        t.style.animation = 'fadeOut .3s ease forwards';
+        setTimeout(() => t.remove(), 320);
+    }, Math.max(1200, timeout));
+}
+document.addEventListener('DOMContentLoaded', ensureToastContainer);
+
 
 // api
 async function api(path, opt = {}) {
@@ -83,8 +144,9 @@ async function createTicket() {
     const t = get('session_token');
     const urgency = Number(document.getElementById('ticketUrgency').value) || 3;
     const ccEmails = parseEmails(document.getElementById('ticketCC').value);
-    await api('/api/tickets', { method: 'POST', body: JSON.stringify({ name: title, content, session_token: t, urgency, ccEmails }) });
-    alert('Chamado criado com sucesso!');
+    const category = document.getElementById('ticketCategory')?.value || '';
+    await api('/api/tickets', { method: 'POST', body: JSON.stringify({ name: title, content, session_token: t, urgency, ccEmails, category }) });
+    notify('success', 'Chamado criado com sucesso!');;
     go('mainUI');
 }
 function statusBadgeHTML(s) {
@@ -135,8 +197,9 @@ async function loadTickets() {
 }
 
 // forgot/reset
-async function forgotPassword() { const email = $('#emailForgot').value.trim(); await api('/api/auth/forgot', { method: 'POST', body: JSON.stringify({ email }) }); alert('O e-mail foi enviado, você receberá o token para redefinição.'); }
-async function resetPassword() { const email = $('#emailReset').value.trim(); const token = $('#tokenReset').value.trim(); const password = $('#newPass').value.trim(); await api('/api/auth/reset', { method: 'POST', body: JSON.stringify({ email, token, password }) }); alert('Senha redefinida com sucesso. Faça login com a nova senha.'); go('index'); }
+async function forgotPassword() { const email = $('#emailForgot').value.trim(); await api('/api/auth/forgot', { method: 'POST', body: JSON.stringify({ email }) }); notify('info', 'Se o e-mail existir no GLPI, você receberá o token para redefinição.'); }
+
+async function resetPassword() { const email = $('#emailReset').value.trim(); const token = $('#tokenReset').value.trim(); const password = $('#newPass').value.trim(); await api('/api/auth/reset', { method: 'POST', body: JSON.stringify({ email, token, password }) }); notify('success', 'Senha redefinida com sucesso. Faça login com a nova senha.'); go('index'); }
 
 // detail
 function getQuery(name) { const u = new URL(location.href); return u.searchParams.get(name); }
@@ -177,6 +240,28 @@ async function loadDashboard() {
     const el = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = fmt(v); };
     el('kpiTotal', data.total); el('kpiOpen', data.open); el('kpiClosed', data.closed);
 }
+
+/* Listar Categorias */
+async function loadCategories() {
+    const t = get('session_token');
+    const items = await api(`/api/tickets/categories?session_token=${encodeURIComponent(t)}`);
+    // Normaliza: queremos [{id, name}]
+    const list = Array.isArray(items) ? items : (items?.data || []);
+    const sel = document.getElementById('ticketCategory');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Selecione uma categoria</option>';
+    list.forEach(c => {
+        const id = c.id ?? c[2] ?? null;
+        const name = c.name ?? c[1] ?? `Categoria #${id}`;
+        if (id) {
+            const opt = document.createElement('option');
+            opt.value = id;
+            opt.textContent = name;
+            sel.appendChild(opt);
+        }
+    });
+}
+
 
 window.login = login; window.logout = logout; window.guardAuth = guardAuth; window.createTicket = createTicket;
 window.loadTickets = loadTickets; window.forgotPassword = forgotPassword; window.resetPassword = resetPassword;

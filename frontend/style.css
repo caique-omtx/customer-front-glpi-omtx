@@ -234,6 +234,10 @@ header.appbar .links a {
     gap: 16px
 }
 
+/* .grid-2 {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px
+} */
 
 .formLogin {
     display: flex;
@@ -601,3 +605,29 @@ body.page-detail {
         opacity: 0.25;
     }
 }
+
+/* ===== Toasts ===== */
+.toast-container {
+  position: fixed;
+  right: 14px;
+  top: 14px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.toast {
+  min-width: 260px;
+  max-width: min(420px, 92vw);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.12);
+  animation: slideIn .25s ease, fadeOut .3s ease 4.2s forwards;
+}
+.toast.success { background: #2e7d32; }
+.toast.error   { background: #c62828; }
+.toast.info    { background: #1565c0; }
+@keyframes slideIn { from { transform: translateY(-10px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+@keyframes fadeOut { to { opacity: 0; transform: translateY(-8px) } }

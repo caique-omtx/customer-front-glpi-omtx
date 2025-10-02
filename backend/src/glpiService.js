@@ -42,7 +42,9 @@ export async function resetPassword(email, token, password){
   return res.data || { ok:true };
 }
 
-export async function createTicket({ name, content, urgency = 3, ccEmails = [] }, sessionToken) {
+
+
+export async function createTicket({ name, content, urgency = 3, ccEmails = [], category }, sessionToken) {
   const payload = { input: { name, content, type: 1, urgency: Number(urgency)||3 } };
   const res = await http.post('/Ticket', payload, { headers: headersWith(sessionToken) });
   const data = res.data;
@@ -52,6 +54,9 @@ export async function createTicket({ name, content, urgency = 3, ccEmails = [] }
 if (ticketId) {
   await ensureRequester(ticketId, sessionToken);
  }
+
+  // categoria
+ if (category) payload.input.itilcategories_id = Number(category);
 
   // Observadores (CC)
   const added = []; const notFound = [];
@@ -94,6 +99,9 @@ export async function getTicketFollowups(ticketId, sessionToken, {limit=50,offse
   const res = await http.get(`/Ticket/${ticketId}/TicketFollowup`, { headers: headersWith(sessionToken), params });
   return res.data;
 }
+
+
+// adicionar followup (resposta) ao ticket
 export async function addTicketFollowup(ticketId, content, sessionToken){
   try{
     const res = await http.post(`/Ticket/${ticketId}/TicketFollowup`, { input: { tickets_id: Number(ticketId), content } }, { headers: headersWith(sessionToken) });
@@ -102,6 +110,15 @@ export async function addTicketFollowup(ticketId, content, sessionToken){
     const res = await http.post(`/ITILFollowup`, { input: { itemtype: 'Ticket', items_id: Number(ticketId), content } }, { headers: headersWith(sessionToken) });
     return res.data;
   }
+}
+
+// lista de categorias (ITILCategory)
+export async function listITILCategories(sessionToken, { range='0-999' } = {}){
+  const res = await http.get('/ITILCategory', {
+    headers: headersWith(sessionToken),
+    params: { range }
+  });
+  return res.data; // GLPI retorna array de objetos (id, name, etc.)
 }
 
 // Observadores (CC)
@@ -143,6 +160,7 @@ export async function addTicketUser(ticketId, userId, type, sessionToken){
   const res = await http.post('/Ticket_User', payload, { headers: headersWith(sessionToken) });
   return res.data;
 }
+
 
 async function ensureRequester(ticketId, sessionToken){
   const uid = await getUserIdFromSession(sessionToken);
